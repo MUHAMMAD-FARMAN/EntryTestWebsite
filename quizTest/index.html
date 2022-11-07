@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <title>Entry Test</title>
+</head>
+
+<body>
+
+    <!-- making a mcqs quiz test page with a timer-->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h1 style="text-align: center;">MCQs Quiz Test</h1>
+                <!-- timer -->
+                <div class="timer">
+                    <span class="count-digit">3</span>
+                    <span class="count-digit">0</span>
+                    <span class="separator">:</span>
+                    <span class="count-digit">0</span>
+                    <span class="count-digit">0</span>
+                </div>
+                <!-- timer ends -->
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Question 1</h5>
+                        <h5 class="card-text">Which of the following is not a programming language?</h5>
+                        <hr>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                <h5> C++</h5>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                <h5> C#</h5>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+                            <label class="form-check-label" for="flexRadioDefault3">
+                                <h5> html</h5>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4">
+                            <label class="form-check-label" for="flexRadioDefault4">
+                                <h5> Python</h5>
+                            </label>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-primary">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous">
+        </script>
+
+    <script>
+        //30 minutes timer
+
+        // Select Every Count Container
+        const countContainer = document.querySelectorAll(".count-digit");
+
+        // Select option buttons
+        const startAction = document.getElementById("start-timer");
+        const stopAction = document.getElementById("stop-timer");
+        const resetAction = document.getElementById("reset-timer");
+
+        // Select HTML5 Audio element
+        const timeoutAudio = document.getElementById("alarm_audio");
+
+        // Default inital value of timer
+        const defaultValue = 30 * 60;
+
+        // variable to the time
+        var countDownTime = defaultValue;
+
+        // variable to store time interval
+        var timerID;
+
+        // Variable to track whether timer is running or not
+        var isStopped = true;
+
+        // Function calculate time string
+        const findTimeString = () => {
+            var minutes = String(Math.trunc(countDownTime / 60));
+            var seconds = String(countDownTime % 60);
+            if (minutes.length === 1) {
+                minutes = "0" + minutes;
+            }
+            if (seconds.length === 1) {
+                seconds = "0" + seconds;
+            }
+            return minutes + seconds;
+        };
+
+        // Function to start Countdown
+        const startTimer = () => {
+            if (isStopped) {
+                isStopped = false;
+                timerID = setInterval(runCountDown, 500);
+            }
+        };
+
+        // Function to stop Countdown
+        const stopTimer = () => {
+            isStopped = true;
+            if (timerID) {
+                clearInterval(timerID);
+            }
+        };
+
+        // Function to reset Countdown
+        const resetTimer = () => {
+            stopTimer();
+            countDownTime = defaultValue;
+            renderTime();
+        };
+
+        // Initialize alarm sound
+        timeoutAudio.src = "http://soundbible.com/grab.php?id=1252&type=mp3";
+        timeoutAudio.load();
+
+        // Attach onclick event to buttons
+        startAction.onclick = startTimer;
+
+        resetAction.onclick = resetTimer;
+        stopAction.onclick = stopTimer;
+
+        // Function to display coundown on screen
+        const renderTime = () => {
+            const time = findTimeString();
+            countContainer.forEach((count, index) => {
+                count.innerHTML = time.charAt(index);
+            });
+        };
+
+        // function to execute timer
+        const runCountDown = () => {
+            // decement time
+            countDownTime -= 1;
+            //Display updated time
+            renderTime();
+
+            // timeout on zero
+            if (countDownTime === 0) {
+                stopTimer();
+                // Play alarm on timeout
+                timeoutAudio.play();
+                countDownTime = defaultValue;
+            }
+        };
+
+
+
+
+
+
+        // // timer
+        // var timeleft = 60;
+        // var downloadTimer = setInterval(function () {
+        //     if (timeleft <= 0) {
+        //         clearInterval(downloadTimer);
+        //         document.getElementById("timer").innerHTML = "Finished";
+        //     } else {
+        //         document.getElementById("timer").innerHTML = timeleft + " seconds remaining";
+        //     }
+        //     timeleft -= 1;
+        // }, 1000);
+
+
+
+
+        // Copilots Code
+        // getting mcqs data from mongodb atlas database
+        // const getMcqs = async () => {
+        //     const response = await fetch('https://api.mongodb.com/api/atlas/v1.0/groups/5f9f1b5b2f2a810c5b8b8b1d/clusters/Cluster0/databases/quizTest/collections/mcqs?pretty=true&limit=1', {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Accept': 'application/json',
+        //             'X-Requested-With': 'XMLHttpRequest',
+        //             'Authorization': 'Basic YWRtaW46YWRtaW4='
+        //         }
+        //     });
+        //     const data = await response.json();
+        //     console.log(data);
+        // }
+
+        // W3school code
+        // var url = "mongodb://localhost:27017/";
+        // var MongoClient = require('mongodb').MongoClient;
+        // MongoClient.connect(url, function (err, db) {
+        //     if (err) throw err;
+        //     var dbo = db.db("mydb");
+        //     dbo.collection("customers").find({}).toArray(function (err, result) {
+        //         if (err) throw err;
+        //         console.log(result);
+        //         db.close();
+        //     });
+        // });
+
+
+
+
+        // Affan's Code
+        // var MongoClient = require('mongodb').MongoClient;
+
+        // let Password = 'Bojtzzv6zT9pSdfC';
+        // let URL = `mongodb+srv://affan:${Password}@users.mq3loit.mongodb.net/test`
+
+        // function getAllDocuments(databaseName, collectionName, obj) {
+        //     let myPromise = new Promise(function (Resolve, Reject) {
+        //         MongoClient.connect(URL, function (err, db) {
+        //             if (err) throw err;
+        //             var dbo = db.db(databaseName);
+        //             dbo.collection(collectionName).find(obj).toArray(function (err, result) {
+        //                 if (err) throw err;
+        //                 db.close();
+        //                 Resolve(result); // when successful
+        //                 Reject(err);  // when error
+        //             });
+        //         });
+        //     });
+
+        //     return myPromise;
+        // }
+
+    </script>
+</body>
+
+</html>
