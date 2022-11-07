@@ -90,7 +90,6 @@ const store = new MongoDBSession({
 
 app.use(
     session({
-        secret: "ajfaksajfasknakj",
         resave: false,
         saveUninitialized: false,
         store: store
