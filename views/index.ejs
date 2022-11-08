@@ -12,7 +12,7 @@
     <title>Entry Test</title>
 </head>
 
-<body>
+<body onload="startTimer()">
 
     <!-- making a mcqs quiz test page with a timer-->
 
@@ -22,7 +22,11 @@
                 <h1 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">MCQs Quiz Test</h1>
                 <!-- timer -->
                 <div class="timer">
-                    <h4 id="timer">01:00</h4>
+                    <span class="count-digit">3</span>
+                    <span class="count-digit">0</span>
+                    <span class="separator">:</span>
+                    <span class="count-digit">0</span>
+                    <span class="count-digit">0</span>
                 </div>
                 <!-- timer ends -->
 
@@ -77,15 +81,100 @@
 
 
                         <button id="submitBtn" type="submit" class="btn btn-primary"
-                            style="margin-top: 20px; margin-bottom: 20px;">Submit</button>
+                            style="margin-top: 20px; margin-bottom: 20px;" onclick="submitMcqs()">Submit</button>
             </div>
         </div>
     </div>
 
 
     <script>
-        document.getElementById('submitBtn').addEventListener('click', async function (e) {
-            e.preventDefault();
+        document.getElementById('submitBtn').addEventListener('click', submitMcqs());
+
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous">
+        </script>
+
+    <script>
+        //Timer
+
+        // Select Every Count Container
+        const countContainer = document.querySelectorAll(".count-digit");
+
+        // Default inital value of timer
+        const defaultValue = 1 * 10;
+
+        // variable to the time
+        var countDownTime = defaultValue;
+
+        // variable to store time interval
+        var timerID;
+
+        // Variable to track whether timer is running or not
+        var isStopped = true;
+
+        // Function calculate time string
+        const findTimeString = () => {
+            var minutes = String(Math.trunc(countDownTime / 60));
+            var seconds = String(countDownTime % 60);
+            if (minutes.length === 1) {
+                minutes = "0" + minutes;
+            }
+            if (seconds.length === 1) {
+                seconds = "0" + seconds;
+            }
+            return minutes + seconds;
+        };
+
+        // Function to start Countdown
+        function startTimer() {
+            if (isStopped) {
+                isStopped = false;
+                timerID = setInterval(runCountDown, 1000);
+            }
+        };
+
+        // Function to stop Countdown
+        const stopTimer = () => {
+            isStopped = true;
+            submitMcqs();
+            if (timerID) {
+                clearInterval(timerID);
+            }
+        };
+
+        // Function to display coundown on screen
+        const renderTime = () => {
+            const time = findTimeString();
+            countContainer.forEach((count, index) => {
+                count.innerHTML = time.charAt(index);
+            });
+        };
+
+        // function to execute timer
+        const runCountDown = () => {
+            // decement time
+            countDownTime -= 1;
+            //Display updated time
+            renderTime();
+
+            // timeout on zero
+            if (countDownTime === 0) {
+                stopTimer();
+                // Play alarm on timeout
+                timeoutAudio.play();
+                countDownTime = defaultValue;
+            }
+        };
+
+
+    </script>
+
+    <script>
+        async function submitMcqs() {
+
             let cards = document.querySelectorAll('.card');
 
             let array = []
@@ -139,31 +228,7 @@
             } else {
                 alert("ERROR while submitting test!");
             }
-        })
-
-    </script>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous">
-        </script>
-
-    <script>
-        // timer
-        var timeleft = 60;
-        var downloadTimer = setInterval(function () {
-            if (timeleft <= 0) {
-                clearInterval(downloadTimer);
-                document.getElementById("timer").innerHTML = "Finished";
-            } else {
-                document.getElementById("timer").innerHTML = timeleft + " seconds remaining";
-            }
-            timeleft -= 1;
-        }, 1000);
-
-
-
-
+        };
     </script>
 </body>
 
