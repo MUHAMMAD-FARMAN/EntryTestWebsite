@@ -13,9 +13,7 @@
 </head>
 
 <body onload="startTimer()">
-
     <!-- making a mcqs quiz test page with a timer-->
-
     <div class="container">
         <div class="row">
             <div class="col-md-6 offset-md-3">
@@ -87,7 +85,10 @@
     </div>
 
 
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', submitMcqs());
 
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
@@ -101,7 +102,7 @@
         const countContainer = document.querySelectorAll(".count-digit");
 
         // Default inital value of timer
-        const defaultValue = 1 * 10;
+        const defaultValue = 30 * 60; // 30 minutes
 
         // variable to the time
         var countDownTime = defaultValue;
