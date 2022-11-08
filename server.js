@@ -69,8 +69,6 @@ mongoose.connect(link, {
 })
 
 
-// let password = 'Farman123';
-// let link = `mongodb+srv://farman:${password}@websitecluster.obzznjm.mongodb.net/mcqs_Database?retryWrites=true&w=majority`;
 
 // mongoose.connect(link, {
 //     useNewUrlParser: true,
@@ -92,7 +90,6 @@ const store = new MongoDBSession({
 
 app.use(
     session({
-        secret: "ajfaksajfasknakj",
         resave: false,
         saveUninitialized: false,
         store: store
