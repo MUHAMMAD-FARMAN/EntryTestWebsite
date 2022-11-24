@@ -29,7 +29,7 @@
                 <!-- timer ends -->
 
                 <% for(var i=0; i<mcqs.length; i++) { %>
-                    <div class="card" id=<%=i+1 %>>
+                    <div class="card" id=<%=mcqs[i].mcqsId %>>
                         <div class="card-body">
                             <h5 class="card-title">Question <%= i+1 %>
                             </h5>
@@ -38,7 +38,8 @@
                             </h5>
                             <hr>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name=<%=i+1 %> id="flexRadioDefault1">
+                                <input class="form-check-input" type="radio" name=<%=mcqs[i].mcqsId %>
+                                id="flexRadioDefault1">
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     <h5>
                                         <%= mcqs[i].options[0] %>
@@ -46,7 +47,8 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name=<%=i+1 %> id="flexRadioDefault2">
+                                <input class="form-check-input" type="radio" name=<%=mcqs[i].mcqsId %>
+                                id="flexRadioDefault2">
                                 <label class="form-check-label" for="flexRadioDefault2">
                                     <h5>
                                         <%= mcqs[i].options[1] %>
@@ -54,7 +56,8 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name=<%=i+1 %> id="flexRadioDefault3">
+                                <input class="form-check-input" type="radio" name=<%=mcqs[i].mcqsId %>
+                                id="flexRadioDefault3">
                                 <label class="form-check-label" for="flexRadioDefault3">
                                     <h5>
                                         <%= mcqs[i].options[2] %>
@@ -62,7 +65,8 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name=<%=i+1 %> id="flexRadioDefault4">
+                                <input class="form-check-input" type="radio" name=<%=mcqs[i].mcqsId %>
+                                id="flexRadioDefault4">
                                 <label class="form-check-label" for="flexRadioDefault4">
                                     <h5>
                                         <%= mcqs[i].options[3] %>
@@ -179,7 +183,7 @@
             cards.forEach((card) => {
                 // console.log(card)
                 let id = card.id;
-                // console.log(id)
+                console.log(id)
 
                 let cardBody = card.childNodes[1]
                 check1 = cardBody.childNodes[7]
@@ -221,7 +225,7 @@
             }).then(res => res.json());
 
             if (result.status === 'ok') {
-                alert("Test has been submitted successfully!", result.correctMcqs);
+                alert("Test submitted successfully \n Your Correct number of mcqs are : " + result.count);
                 return;
             } else {
                 alert("ERROR while submitting test!");

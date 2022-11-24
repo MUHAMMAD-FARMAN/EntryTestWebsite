@@ -146,6 +146,7 @@
             const option4 = document.getElementById("option4").value;
             const explanation = document.getElementById("explanation").value;
             const subject = document.getElementById('subject').value;
+            const mcqsId = 0;
 
             const result = await fetch('/addMcqss', {
                 method: 'POST',
@@ -161,7 +162,8 @@
                         option4,
                     ],
                     explanation,
-                    subject
+                    subject,
+                    mcqsId
 
                 })
             }).then(res => res.json());
