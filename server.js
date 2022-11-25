@@ -36,6 +36,24 @@ function addNewDocument(databaseName, collectionName, document) {
     return promise;
 };
 
+
+function getAllDocumentsAccordingToObjectOfSubject(databaseName, collectionName, obj) {
+    let myPromise = new Promise(function (Resolve, Reject) {
+        MongoClient.connect(link, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db(databaseName);
+            dbo.collection(collectionName).findOneAndUpdate(obj).toArray(function (err, result) {
+                if (err) throw err;
+                db.close();
+                Resolve(result); // when successful
+                Reject(err);  // when error
+            });
+        });
+    });
+
+    return myPromise;
+}
+
 function getAllDocuments(databaseName, collectionName) {
     let myPromise = new Promise(function (Resolve, Reject) {
         var MongoClient = require('mongodb').MongoClient;
@@ -55,6 +73,31 @@ function getAllDocuments(databaseName, collectionName) {
 
     return myPromise;
 };
+
+// Function to get documents according to subjects from dataBase
+function getDocumentsBySubject(databaseName, collectionName, Subject) {
+    let myPromise = new Promise(function (Resolve, Reject) {
+        var MongoClient = require('mongodb').MongoClient;
+        var url = link;
+
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db(databaseName);
+            dbo.collection(collectionName).find({ subject: Subject }).toArray(function (err, result) {
+                if (err) throw err;
+                db.close();
+                Resolve(result);
+                Reject(err);
+            });
+        });
+    });
+
+    return myPromise;
+};
+
+
+
+
 function incrementMcqsCounter(databaseName, collectionName) {
     let promise = new Promise(function (resolve, reject) {
         let promise2 = getAllDocuments(databaseName, collectionName);
@@ -121,22 +164,24 @@ app.use(bodyParser.json())
 
 
 app.use('/', express.static(path.join(__dirname, 'static')));
-app.use('/quizTest', express.static(path.join(__dirname, 'quizTest')));
 
-app.get('/quizTest', (req, res) => {
-    getAllDocuments('mcqs_Database', 'mcqs', {}).then((result) => {
-        indexarray = [];
-        for (let i = 0; i < result.length; i++) {
-            indexarray.push(result[i].mcqsId);
-        }
-        console.log(indexarray);
 
-        res.send(result);
-    }).catch((e) => {
-        console.log(e);
-    })
-    res.sendFile(path.join(__dirname, 'quizTest', 'index.html'));
-})
+// app.use('/quizTest', express.static(path.join(__dirname, 'quizTest')));
+
+// app.get('/quizTest', (req, res) => {
+//     getAllDocuments('mcqs_Database', 'mcqs', {}).then((result) => {
+//         indexarray = [];
+//         for (let i = 0; i < result.length; i++) {
+//             indexarray.push(result[i].mcqsId);
+//         }
+//         console.log(indexarray);
+
+//         res.send(result);
+//     }).catch((e) => {
+//         console.log(e);
+//     })
+//     res.sendFile(path.join(__dirname, 'quizTest', 'index.html'));
+// })
 
 app.use('/adminPanel', express.static(path.join(__dirname, 'private')));
 app.post('/addMcqss', async (req, res) => {
@@ -179,27 +224,24 @@ app.post('/addMcqss', async (req, res) => {
 
 
 
-// function getAllDocuments(databaseName, collectionName, obj) {
-//     let myPromise = new Promise(function (Resolve, Reject) {
-//         MongoClient.connect(link, function (err, db) {
-//             if (err) throw err;
-//             var dbo = db.db(databaseName);
-//             dbo.collection(collectionName).findOneAndUpdate(obj).toArray(function (err, result) {
-//                 if (err) throw err;
-//                 db.close();
-//                 Resolve(result); // when successful
-//                 Reject(err);  // when error
-//             });
-//         });
-//     });
 
-//     return myPromise;
-// }
 
 app.set('view engine', 'ejs');
 app.use('/math', express.static(path.join(__dirname, 'views')));
 app.get('/math', (req, res) => {
-    getAllDocuments('mcqs_Database', 'mcqs', { subject: 'Maths' }).then((result) => {
+    // getAllDocuments('mcqs_Database', 'mcqs', { subject: 'Maths' }).then((result) => {
+    getDocumentsBySubject('mcqs_Database', 'mcqs', 'Maths').then((result) => {
+        res.render('index', { mcqs: result });
+        // res.redirect('/math');
+    }).catch((e) => {
+        console.log(e);
+    })
+
+})
+app.use('/physics', express.static(path.join(__dirname, 'views')));
+app.get('/physics', (req, res) => {
+    // getAllDocuments('mcqs_Database', 'mcqs', { subject: 'Physics' }).then((result) => {
+    getDocumentsBySubject('mcqs_Database', 'mcqs', 'Physics').then((result) => {
         res.render('index', { mcqs: result });
         // res.redirect('/math');
     }).catch((e) => {
@@ -208,8 +250,58 @@ app.get('/math', (req, res) => {
 
 })
 
-app.get('/physics', (req, res) => {
-    getAllDocuments('mcqs_Database', 'mcqs', { subject: 'Physics' }).then((result) => {
+app.use('/Chemistry', express.static(path.join(__dirname, 'views')));
+app.get('/Chemistry', (req, res) => {
+    // getAllDocuments('mcqs_Database', 'mcqs', { subject: 'Chemistry' }).then((result) => {
+    getDocumentsBySubject('mcqs_Database', 'mcqs', 'Chemistry').then((result) => {
+        res.render('index', { mcqs: result });
+        // res.redirect('/math');
+    }).catch((e) => {
+        console.log(e);
+    })
+
+})
+
+app.use('/Biology', express.static(path.join(__dirname, 'views')));
+app.get('/Biology', (req, res) => {
+    // getAllDocuments('mcqs_Database', 'mcqs', { subject: 'Biology' }).then((result) => {
+    getDocumentsBySubject('mcqs_Database', 'mcqs', 'Biology').then((result) => {
+        res.render('index', { mcqs: result });
+        // res.redirect('/math');
+    }).catch((e) => {
+        console.log(e);
+    })
+
+})
+
+app.use('/English', express.static(path.join(__dirname, 'views')));
+app.get('/English', (req, res) => {
+    // getAllDocuments('mcqs_Database', 'mcqs', { subject: 'English' }).then((result) => {
+    getDocumentsBySubject('mcqs_Database', 'mcqs', 'English').then((result) => {
+        res.render('index', { mcqs: result });
+        // res.redirect('/math');
+    }).catch((e) => {
+        console.log(e);
+    })
+
+})
+
+app.use('/Computer', express.static(path.join(__dirname, 'views')));
+app.get('/Computer', (req, res) => {
+    // getAllDocuments('mcqs_Database', 'mcqs', { subject: 'Computer' }).then((result) => {
+    getDocumentsBySubject('mcqs_Database', 'mcqs', 'Computer').then((result) => {
+        res.render('index', { mcqs: result });
+        // res.redirect('/math');
+    }).catch((e) => {
+        console.log(e);
+    })
+
+})
+
+app.use('/LogicalReasoning', express.static(path.join(__dirname, 'views')));
+app.get('/LogicalReasoning', (req, res) => {
+    // getAllDocuments('mcqs_Database', 'mcqs', { subject: 'LogicalReasoning' }).then((result) => {
+    getDocumentsBySubject('mcqs_Database', 'mcqs', 'LogicalReasoning').then((result) => {
         res.render('index', { mcqs: result });
         // res.redirect('/math');
     }).catch((e) => {
@@ -230,12 +322,17 @@ app.post('/submit', async (req, res) => {
     const slugs =
     {
         'math': 'Maths',
-        'physics': 'Physics'
+        'physics': 'Physics',
+        'Chemistry': 'Chemistry',
+        'Biology': 'Biology',
+        'English': 'English',
+        'Computer': 'Computer',
+        'LogicalReasoning': 'LogicalReasoning'
     }
 
     const subject = slugs[slug]
 
-    const pendingPromise = getAllDocuments('mcqs_Database', 'mcqs', { subject: subject })
+    const pendingPromise = getDocumentsBySubject('mcqs_Database', 'mcqs', subject)
     pendingPromise.then((result) => {
         console.log(result);
 
