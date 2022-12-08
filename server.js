@@ -113,35 +113,35 @@ function incrementMcqsCounter(databaseName, collectionName) {
 }
 
 
-const link = 'mongodb://localhost:27017/mcqs_Database';
-mongoose.connect(link, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useNewUrlParser: true
-}).then(
-    () => {
-        console.log('Connected to local database');
-    }
-).catch((e) => {
-    console.log(`Error connecting to local database ${e}`);
-})
-
-
-// let password = 'Farman123';
-// let link = `mongodb+srv://farman:${password}@websitecluster.obzznjm.mongodb.net/mcqs_Database?retryWrites=true&w=majority`;
-
+// const link = 'mongodb://localhost:27017/mcqs_Database';
 // mongoose.connect(link, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true,
 //     useNewUrlParser: true
-
 // }).then(
 //     () => {
-//         console.log('Connected to Cloud database');
+//         console.log('Connected to local database');
 //     }
 // ).catch((e) => {
-//     console.log(`Error connecting to Atlas Cloud database ${e}`);
+//     console.log(`Error connecting to local database ${e}`);
 // })
+
+
+let password = 'Farman123';
+let link = `mongodb+srv://farman:${password}@websitecluster.obzznjm.mongodb.net/mcqs_Database?retryWrites=true&w=majority`;
+
+mongoose.connect(link, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+
+}).then(
+    () => {
+        console.log('Connected to Cloud database');
+    }
+).catch((e) => {
+    console.log(`Error connecting to Atlas Cloud database ${e}`);
+})
 
 const store = new MongoDBSession({
     uri: link,
@@ -164,6 +164,10 @@ app.use(bodyParser.json())
 
 
 app.use('/', express.static(path.join(__dirname, 'static')));
+// app.use('/', (req, res) => {
+//     res.sendFile("./private/editMcqs.html")
+// });
+
 
 
 // app.use('/quizTest', express.static(path.join(__dirname, 'quizTest')));
@@ -219,12 +223,6 @@ app.post('/addMcqss', async (req, res) => {
     // console.log(response)
 
 })
-
-
-
-
-
-
 
 app.set('view engine', 'ejs');
 app.use('/math', express.static(path.join(__dirname, 'views')));
